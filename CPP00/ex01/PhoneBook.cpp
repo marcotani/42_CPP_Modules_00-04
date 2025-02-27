@@ -1,0 +1,82 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   PhoneBook.cpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/15 17:45:32 by mtani             #+#    #+#             */
+/*   Updated: 2024/06/15 22:43:34 by mtani            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "PhoneBook.hpp"
+
+
+PhoneBook::PhoneBook()
+{
+    contactCount = 0;
+    index = 1;
+}
+
+PhoneBook::~PhoneBook()
+{
+}
+
+void PhoneBook::addContact()
+{
+    if (contactCount >= 8)
+        std::cout << "Phonebook is full, oldest entries will be overwritten." << std::endl;
+    this->contacts[index - 1].setContact(index);
+    if (index >=8)
+        index = 1;
+    else
+        index++;
+    if (contactCount < 8)
+        contactCount++;
+}
+
+void PhoneBook::searchContact()
+{
+    std::string info;
+    if (contactCount == 0)
+    {
+        std::cout << "No contacts available." << std::endl;
+        return;
+    }
+    std::cout << "Here is a list of your contacts:" << std::endl;
+    for (int i = 0; i < contactCount; i++)
+    {
+        std::cout << std::setw(10) << i + 1 << "  |  ";
+        info = contacts[i].returnInfo("First Name");
+        if (info.length() > 10)
+            info = info.substr(0, 9) + ".";
+        std::cout << std::setw(10) << info << "  |  ";
+        info = contacts[i].returnInfo("Last Name");
+        if (info.length() > 10)
+            info = info.substr(0, 9) + ".";
+        std::cout << std::setw(10) << info << "  |  ";
+        info = contacts[i].returnInfo("Nickname");
+        if (info.length() > 10)
+            info = info.substr(0, 9) + ".";
+        std::cout << std::setw(10) << info << std::endl;
+    }
+    std::cout << "Enter the index of the contact you want to view in its entirety: ";
+    int index;
+    do
+    {
+        std::cin >> index;
+        if (index < 1 || index > contactCount || std::cin.fail())
+        {
+            std::cin.clear();
+            std::cin.ignore(10000, '\n');
+            std::cout << "Invalid input, please try again." << std::endl;
+            std::cout << "Enter the index of the contact you want to view in its entirety: ";
+        }
+    } while (index < 1 || index > contactCount);
+    std::cout << "First Name: " << contacts[index - 1].returnInfo("First Name") << std::endl;
+    std::cout << "Last Name: " << contacts[index - 1].returnInfo("Last Name") << std::endl;
+    std::cout << "Nickname: " << contacts[index - 1].returnInfo("Nickname") << std::endl;
+    std::cout << "Phone Number: " << contacts[index - 1].returnInfo("Phone Number") << std::endl;
+    std::cout << "Darkest Secret: " << contacts[index - 1].returnInfo("Darkest Secret") << std::endl;
+}
